@@ -4,7 +4,7 @@ def utils
 
 def init(){
   utils = fileLoader.fromGit('jenkins_pipeline_tools/utils',
-    'https://github.hpe.com/moshe-belostotsky/tools.git', 'master',
+    'https://github.hpe.com/ChatOps/tools.git', 'master',
     null, '')
 }
 

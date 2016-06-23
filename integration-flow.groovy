@@ -11,7 +11,7 @@ def wraps(body) {
 
 def runPipeline(FailOnTest = true) {
   def stages, utils, changeUrl, version
-  fileLoader.withGit('https://github.hpe.com/moshe-belostotsky/tools.git',
+  fileLoader.withGit('https://github.hpe.com/ChatOps/tools.git',
     'master', null, '') {
     stages = fileLoader.load('jenkins_pipeline_tools/stages');
     utils = fileLoader.load('jenkins_pipeline_tools/utils');
