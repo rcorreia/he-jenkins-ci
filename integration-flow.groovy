@@ -37,6 +37,7 @@ def runPipeline(FailOnTest = true) {
                       def release_notes = stages.package_and_release(version)
                       slackSend color: 'good', message: "New version "+
                         "Preprleased: ${env.JOB_NAME} ${env.BUILD_NUMBER}\n"+
+                        "Version: ${version}\nRelease Notes:\n"+
                         "${release_notes}\n${env.BUILD_URL}${changeUrl}"
                   } else if (utils.check_pr(env)) {
                       echo 'it\'s a pull request, not tagging'
