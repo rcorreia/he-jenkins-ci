@@ -59,9 +59,9 @@ def create_version_json (url, path, auth, version_name,
   withCredentials([[$class:
     'UsernamePasswordMultiBinding', credentialsId: auth,
     passwordVariable: 'PW', usernameVariable: 'UN']]) {
-      sh "curl -H \'Authorization: token ${env.PW}\' "+
-        "--request POST --data \'${json}\' "+
-        "${url}/repos/${path}/releases > out"
+      sh "curl -H \'Authorization: token "+env.PW+"\' "+
+        "--request POST --data \'"+json+"\' "+
+        url+"/repos/"+path+"/releases > out"
   }
   def resFile = readFile('out').trim()
   def res = new JsonSlurper().parseText(resFile)
