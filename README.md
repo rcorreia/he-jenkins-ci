@@ -17,7 +17,8 @@ Running a pipeline and report back to github+ slack channel the status of a comm
 6. Timestamper
 7. Warnings Plug-in
 8. Slack plugin
-# configurations:
+
+### configurations:
 1. configure global slack plugin
 2. Credentials- To use this pipeline you must have the following credentials id installed:
   1. github-token: username+password token for github.com hosted projects [token should have `repo` credentials]
