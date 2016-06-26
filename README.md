@@ -4,7 +4,7 @@ Jenkins pipeline scripts for hubot enterprise CI/CD
 ## what it is?
 groovy script for Jenkins 2.0 pipelines to use, purposed for hubot-enterprise plugins (but not just)
 
-## what is does
+## what is does?
 Running a pipeline and report back to github+ slack channel the status of a commit/pull request
 
 ## prerequisites
@@ -23,6 +23,7 @@ Running a pipeline and report back to github+ slack channel the status of a comm
   1. github-token: username+password token for github.com hosted projects [token should have `repo` credentials]
   2. github-enterprise-token: username+password token for github enterprise hosted projects [token should have `repo` credentials]
   3. github ssh key
+
 ### Jenkins slave executor
 1. nodejs
 2. npm
