@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing,
  * Software distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License. 
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 import groovy.json.*
@@ -26,10 +26,10 @@ def wraps(body) {
 
 def runPipeline(FailOnTest = true) {
   def stages, utils, changeUrl, version
-  fileLoader.withGit('https://github.hpe.com/ChatOps/tools.git',
+  fileLoader.withGit('https://github.com/eedevops/he-jenkins-ci.git',
     'master', null, '') {
-    stages = fileLoader.load('jenkins_pipeline_tools/stages');
-    utils = fileLoader.load('jenkins_pipeline_tools/utils');
+    stages = fileLoader.load('stages');
+    utils = fileLoader.load('utils');
   }
   node {
       wraps {
