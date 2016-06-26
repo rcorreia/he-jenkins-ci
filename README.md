@@ -42,14 +42,5 @@ Running a pipeline and report back to github+ slack channel the status of a comm
       - use github api to create new `version` from this tag- make release notes from commit diff between current and previous tags
 
 ## usage:
-1. create Jenkinsfile in projects you wish to create pipelines for
-```groovy
-def pipeline = fileLoader.fromGit('integration-flow',
-    'https://github.hpe.com/eedevops/he-jenkins-ci.git', 'master', null, '')
-
-pipeline.runPipeline()
-```
-```groovy
-pipeline.runPipeline(FailOnTest = true) // set to false for pipeline not fail in tests
-```
+1. Jopy Jenkinsfile.example to your project root folder edit `pipeline.runPipeline(true/false)`, based on your desire to fail the job on failed unit tests
 2. create jenkins Github Organization folder job and point to your organization
