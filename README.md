@@ -17,6 +17,7 @@ Running a pipeline and report back to github+ slack channel the status of a comm
 6. Timestamper
 7. Warnings Plug-in
 8. Slack plugin
+9. HTTP Request Plugin 
 
 ### configurations:
 1. configure global slack plugin
