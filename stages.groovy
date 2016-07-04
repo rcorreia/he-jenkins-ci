@@ -17,19 +17,34 @@ import groovy.json.*
 
 def utils
 
-def init(){
+/**
+ * init and load params
+ *
+ * @param pipelineRepo repo of the script to load
+ *
+ */
+def init(pipelineRepo){
   // load utils lib
   utils = fileLoader.fromGit('utils',
-    'https://github.com/eedevops/he-jenkins-ci.git', 'master',
+    pipelineRepo, 'master',
     null, '')
 }
 
+/**
+ * cleanup workspace
+ *
+ */
 def cleanup_workspace(){
   // cleanup workspace
   stage 'Clean workspace'
   deleteDir()
 }
 
+/**
+ * return ['changeUrl', 'version']
+ * scm checkout and parse package.json file
+ *
+ */
 def co_source(){
   // check out source
   stage 'Checkout source'
@@ -42,11 +57,19 @@ def co_source(){
   return ["changeUrl": changeUrl, "version": version]
 }
 
+/**
+ * build (npm instal)
+ *
+ */
 def build(){
   stage 'build'
   sh 'npm install'
 }
 
+/**
+ * lint (npm run jslint and coffeelint)
+ *
+ */
 def lint(){
   stage 'linter'
   sh 'npm run coffeelint'
@@ -58,12 +81,20 @@ def lint(){
     unHealthy: ''])
 }
 
+/**
+ * test (npm test)
+ *
+ */
 def test(){
   stage 'test'
   sh 'npm test || true'
   step([$class: 'JUnitResultArchiver', testResults: 'test/xunit.xml'])
 }
 
+/**
+ * package and release version (git tag and create github version)
+ *
+ */
 def package_and_release(version){
   stage 'package'
   def changes = utils.get_tags_diff()

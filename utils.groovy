@@ -97,7 +97,6 @@ def guess_github_settings () {
  * @param prerelease prerelease setting in github
  * @param changes changes log
  */
-
  def create_version_json (url, path, auth, version_name,
   version_tag, prerelease, changes) {
   echo 'creating new github version'

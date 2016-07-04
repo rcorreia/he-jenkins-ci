@@ -15,6 +15,12 @@
 
 import groovy.json.*
 
+/**
+ * wrap with timestamper and ansi-color plugin
+ *
+ * @param body function to wrap
+ *
+ */
 def wraps(body) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm',
       'defaultFg': 1, 'defaultBg': 2]) {
@@ -24,9 +30,15 @@ def wraps(body) {
     }
 }
 
-def runPipeline(FailOnTest = true) {
+/**
+ * run the pipeline (main logic)
+ *
+ * @param pipelineRepo: the repo of the pipeline path
+ * @param failOnTest pipeline to fail if tests failed
+ */
+def runPipeline(pipelineRepo, failOnTest = true) {
   def stages, utils, changeUrl, version
-  fileLoader.withGit('https://github.com/eedevops/he-jenkins-ci.git',
+  fileLoader.withGit(pipelineRepo,
     'master', null, '') {
     stages = fileLoader.load('stages');
     utils = fileLoader.load('utils');
@@ -35,7 +47,7 @@ def runPipeline(FailOnTest = true) {
       wraps {
           try{
               // init stages script
-              stages.init()
+              stages.init(pipelineRepo)
               // clean up workspace
               stages.cleanup_workspace()
               // check out source code
@@ -48,9 +60,9 @@ def runPipeline(FailOnTest = true) {
               stages.lint()
               // run unit tests
               stages.test()
-              // if unit tests failed (build set to 'USTABLE') and FailOnTest
+              // if unit tests failed (build set to 'USTABLE') and failOnTest
               // then skip version building
-              if (currentBuild.result != 'UNSTABLE' || !FailOnTest)
+              if (currentBuild.result != 'UNSTABLE' || !failOnTest)
               {
                   // get latest tagged version
                   def tag_version = utils.get_tag_version()
