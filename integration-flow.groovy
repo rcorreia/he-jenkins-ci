@@ -34,22 +34,36 @@ def runPipeline(FailOnTest = true) {
   node {
       wraps {
           try{
+              // init stages script
               stages.init()
-              stages.cleanup()
+              // clean up workspace
+              stages.cleanup_workspace()
+              // check out source code
               def info = stages.co_source()
               changeUrl = info["changeUrl"]
               version = info["version"]
+              // run build
               stages.build()
+              // run linter
+              stages.lint()
+              // run unit tests
               stages.test()
+              // if unit tests failed (build set to 'USTABLE') and FailOnTest
+              // then skip version building
               if (currentBuild.result != 'UNSTABLE' || !FailOnTest)
               {
+                  // get latest tagged version
                   def tag_version = utils.get_tag_version()
                   echo "latest tag version: "+tag_version
                   echo 'versions: ['+version +'] ['+tag_version+']'
+                  // check that is its not PR, is master branch
+                  // and there is no version like that
                   if (!utils.check_pr(env) && (version != tag_version) &&
                     (env.BRANCH_NAME == 'master'))
                   {
+                      // release version and get release notes
                       def release_notes = stages.package_and_release(version)
+                      // notify  that version was release on slack
                       slackSend color: 'good', message: "New version "+
                         "Preprleased: ${env.JOB_NAME} ${env.BUILD_NUMBER}\n"+
                         "Version: ${version}\nRelease Notes:\n"+
@@ -61,10 +75,12 @@ def runPipeline(FailOnTest = true) {
                   } else {
                       echo "version is the same, not tagging"
                   }
+                  // send that build is done
                   slackSend color: 'good', message: "Build done: "+
                     "${env.JOB_NAME} ${env.BUILD_NUMBER}\n"+
                     "${env.BUILD_URL}${changeUrl}"
               } else {
+                // send that unit tests failed
                   slackSend color: 'warning', message: "Unit tests failed: "+
                     "${env.JOB_NAME} ${env.BUILD_NUMBER}\n"+
                     "${env.BUILD_URL}${changeUrl}"
@@ -72,6 +88,7 @@ def runPipeline(FailOnTest = true) {
               step([$class: 'GitHubCommitStatusSetter', statusResultSource:
                 [$class: 'ConditionalStatusResultSource', results: []]])
           } catch (e) {
+              // job is failed
               echo "Exception: ${e}"
               slackSend color: 'danger', message: "Job failed: ${env.JOB_NAME}"+
                 " ${env.BUILD_NUMBER}\n${env.BUILD_URL}${changeUrl}"

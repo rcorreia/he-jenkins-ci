@@ -10,17 +10,26 @@
  * Unless required by applicable law or agreed to in writing,
  * Software distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License. 
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 import groovy.json.*
 
+/**
+ * return version from package.json file
+ *
+ * @param fname full path to package.json
+ */
 def get_version ( fname ) {
   def jsonText = readFile(fname)
   def json = new JsonSlurper().parseText(jsonText)
   return json.version
 }
 
+/**
+ * get latest tag name (version)
+ *
+ */
 def get_tag_version (){
   sh "git describe --tags `git rev-list --tags "+
     "--max-count=1` | sed s/^v//g | "+
@@ -28,6 +37,10 @@ def get_tag_version (){
   return readFile('ver.txt').trim()
 }
 
+/**
+ * write diff between HEAD and latest tag in nice formatted way
+ *
+ */
 def get_tags_diff () {
   try {
     sh "git describe --tags"
@@ -41,10 +54,19 @@ def get_tags_diff () {
   return 'changes.txt'
 }
 
+/**
+ * check it its a pull request
+ *
+ */
 def check_pr ( env_vars ) {
   return env_vars.CHANGE_TARGET ? true : false
 }
 
+/**
+ * Find if its github.com or enterprise installation
+ * return github api url and credentials to use
+ *
+ */
 def guess_github_settings () {
   sh 'git remote -v | grep origin | head -1 | '+
     'awk \'{print $2}\' | '+
@@ -64,7 +86,19 @@ def guess_github_settings () {
   return ret
 }
 
-def create_version_json (url, path, auth, version_name,
+/**
+ * Create new version in github with the new tag created
+ *
+ * @param url github api url
+ * @param path project path
+ * @parama auth auth key id
+ * @param version_name version name
+ * @param version_tag tag name to create the version from
+ * @param prerelease prerelease setting in github
+ * @param changes changes log
+ */
+
+ def create_version_json (url, path, auth, version_name,
   version_tag, prerelease, changes) {
   echo 'creating new github version'
   def obj = [tag_name: version_tag, name: version_name,

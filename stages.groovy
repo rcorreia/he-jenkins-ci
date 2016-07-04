@@ -18,20 +18,23 @@ import groovy.json.*
 def utils
 
 def init(){
+  // load utils lib
   utils = fileLoader.fromGit('utils',
     'https://github.com/eedevops/he-jenkins-ci.git', 'master',
     null, '')
 }
 
-def cleanup(){
+def cleanup_workspace(){
+  // cleanup workspace
   stage 'Clean workspace'
   deleteDir()
-  sh 'ls -lah'
 }
 
 def co_source(){
+  // check out source
   stage 'Checkout source'
   checkout scm
+  // get version from package.json
   def version = utils.get_version ('package.json')
   echo "version ${version}"
   def changeUrl =
@@ -42,6 +45,9 @@ def co_source(){
 def build(){
   stage 'build'
   sh 'npm install'
+}
+
+def lint(){
   stage 'linter'
   sh 'npm run coffeelint'
   sh 'npm run jslint'
