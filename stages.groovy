@@ -36,7 +36,9 @@ def init(pipelineRepo){
     requestBody: req, url: 'https://www.google-analytics.com/collect'
   }
   // return project name: to be added to DIR
-  return utils.guess_github_settings().project.split('/').last()
+  dir (env['WORKSPACE']+'@script'){
+	return utils.guess_github_settings().project.split('/').last()
+  }
 }
 
 /**
