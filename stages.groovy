@@ -28,13 +28,6 @@ def init(pipelineRepo){
   utils = fileLoader.fromGit('utils',
   pipelineRepo, 'master',
   null, '')
-  if (!env['ADMIN_PW'] || env['ADMIN_PW'] == "false")
-  {
-    def cid = System.currentTimeMillis().toString()
-    def req = 'v=1&tid=UA-80724671-1&cid='+cid+'&t=pageview&dp=%2Fpipeline%2Frun'
-    def response = httpRequest httpMode: 'POST', validResponseCodes: '0:1000',
-    requestBody: req, url: 'https://www.google-analytics.com/collect'
-  }
   // return project name: to be added to DIR
   dir (env['WORKSPACE']+'@script'){
 	return utils.guess_github_settings().project.split('/').last()
